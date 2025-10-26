@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6B923A282EA5272200F0858F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B923A272EA5272200F0858F /* Assets.xcassets */; };
+		6B97EBD12EA8DF9E00A00DD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97EBCE2EA8DF9E00A00DD4 /* ContentView.swift */; };
+		6B97EBD32EA8DF9E00A00DD4 /* SetReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97EBD02EA8DF9E00A00DD4 /* SetReminderView.swift */; };
+		6B97EBDE2EA8FC6900A00DD4 /* TodayReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97EBDD2EA8FC6600A00DD4 /* TodayReminderView.swift */; };
+		6B97EC512EAE56CF00A00DD4 /* AllDoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97EC502EAE56CF00A00DD4 /* AllDoneView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6B4B961A2EA50EC800BE6A16 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +35,11 @@
 		6B4B960C2EA50EC700BE6A16 /* plant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = plant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4B96192EA50EC800BE6A16 /* plantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = plantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4B96232EA50EC800BE6A16 /* plantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = plantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B923A272EA5272200F0858F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6B97EBCE2EA8DF9E00A00DD4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		6B97EBD02EA8DF9E00A00DD4 /* SetReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetReminderView.swift; sourceTree = "<group>"; };
+		6B97EBDD2EA8FC6600A00DD4 /* TodayReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayReminderView.swift; sourceTree = "<group>"; };
+		6B97EC502EAE56CF00A00DD4 /* AllDoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllDoneView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,10 +88,14 @@
 		6B4B96032EA50EC700BE6A16 = {
 			isa = PBXGroup;
 			children = (
+				6B97EBDC2EA8F06200A00DD4 /* viewModel */,
+				6B97EBDB2EA8F04E00A00DD4 /* model */,
+				6B97EBDA2EA8F03D00A00DD4 /* view */,
 				6B4B960E2EA50EC700BE6A16 /* plant */,
 				6B4B961C2EA50EC800BE6A16 /* plantTests */,
 				6B4B96262EA50EC800BE6A16 /* plantUITests */,
 				6B4B960D2EA50EC700BE6A16 /* Products */,
+				6B923A272EA5272200F0858F /* Assets.xcassets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +107,31 @@
 				6B4B96232EA50EC800BE6A16 /* plantUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6B97EBDA2EA8F03D00A00DD4 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				6B97EBCE2EA8DF9E00A00DD4 /* ContentView.swift */,
+				6B97EBD02EA8DF9E00A00DD4 /* SetReminderView.swift */,
+				6B97EBDD2EA8FC6600A00DD4 /* TodayReminderView.swift */,
+				6B97EC502EAE56CF00A00DD4 /* AllDoneView.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		6B97EBDB2EA8F04E00A00DD4 /* model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		6B97EBDC2EA8F06200A00DD4 /* viewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = viewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,7 +213,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					6B4B960B2EA50EC700BE6A16 = {
 						CreatedOnToolsVersion = 16.4;
@@ -212,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B923A282EA5272200F0858F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +279,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B97EBDE2EA8FC6900A00DD4 /* TodayReminderView.swift in Sources */,
+				6B97EBD12EA8DF9E00A00DD4 /* ContentView.swift in Sources */,
+				6B97EC512EAE56CF00A00DD4 /* AllDoneView.swift in Sources */,
+				6B97EBD32EA8DF9E00A00DD4 /* SetReminderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +375,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -385,6 +433,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -398,6 +447,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YW9VN3J6CL;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -405,6 +457,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -412,6 +465,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = h.layan.plant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -433,6 +489,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -440,6 +497,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = h.layan.plant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
