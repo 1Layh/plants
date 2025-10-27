@@ -5,118 +5,259 @@
 //  Created by Layan on 30/04/1447 AH.
 //
 import SwiftUI
-
-struct PlantReminder: Identifiable {
-    let id = UUID()
-    let name: String
-    let details: String
-    let locationIcon: String
-    var isCompleted: Bool = false
-    // تفاصيل إضافية لتظهر في الـ Row الجديدة
-    let room: String = "Kitchen"
-    let lightDetails: String = "Full sun"
-    let waterAmount: String = "20-50 ml"
-}
+import UserNotifications
 
 struct TodayReminderView: View {
-    
-    // ✅ متغير لتتبع حالة عرض Sheet الإضافة
+    @ObservedObject var viewModel: TodayReminderViewModel
+
     @State private var isShowingAddPlantSheet = false
+    @State private var isShowingEditSheet = false
+    @State private var selectedReminderForEdit: PlantReminder? = nil
 
-    @State private var todayReminders: [PlantReminder] = []
-
-    
     @State private var selectedFilter: String = ""
-    
-    // الدالة المساعدة لحل مشكلة Binding في ForEach
+    @State private var plusPressed = false
+    @State private var showAllDone = false
+
     private func binding(for reminder: PlantReminder) -> Binding<PlantReminder> {
-        guard let index = todayReminders.firstIndex(where: { $0.id == reminder.id }) else {
-            fatalError("Can't find reminder in array")
-        }
-        return $todayReminders[index]
+        Binding(
+            get: {
+                viewModel.reminders.first(where: { $0.id == reminder.id }) ?? reminder
+            },
+            set: { updated in
+                viewModel.update(updated)
+                evaluateAllDone()
+            }
+        )
     }
-    
-    // حسابات شريط التقدم
-    var totalReminders: Int { todayReminders.count }
-    var completedReminders: Int { todayReminders.filter { $0.isCompleted }.count }
-    var progress: Double { totalReminders > 0 ? Double(completedReminders) / Double(totalReminders) : 0 }
-    
+
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
             Color.black.ignoresSafeArea()
-            
-            List {
-                
-                headerView
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.black)
-                
-                filterBar
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.black)
-                
-                // ✅ استخدام ForEach المصحح
-                ForEach(todayReminders) { reminder in
-                    ReminderRow(reminder: self.binding(for: reminder))
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.black)
+
+            if showAllDone {
+                // حالة "الكل منتهٍ": نعرض AllDone داخل الصفحة
+                VStack {
+                    AllDoneHeader()
+                    Spacer()
+
+                    ZStack {
+                        Image("Image 2")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 180, height: 280)
+
+                        Image("all_done_plant")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 250, height: 250)
+                            .offset(y: -20)
+                    }
+                    .padding(.bottom, 20)
+
+                    Text("All Done! 🎉")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Text("All Reminders Completed")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+
+                    Spacer()
                 }
+
+                // زر + الدائري
+                addButton
+                    .padding(.trailing, 25)
+                    .padding(.bottom, 35)
+
+            } else {
+                // الحالة العادية: قائمة بالتذكيرات + زر +
+                List {
+                    headerView
+                        .listRowSeparatorTint(.clear)
+                        .listRowBackground(Color.black)
+
+                    filterBar
+                        .listRowSeparatorTint(.clear)
+                        .listRowBackground(Color.black)
+
+                    ForEach(viewModel.reminders) { reminder in
+                        ReminderRow(reminder: self.binding(for: reminder)) {
+                            viewModel.toggleCompleted(id: reminder.id)
+                            evaluateAllDone()
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedReminderForEdit = reminder
+                            isShowingEditSheet = true
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                viewModel.delete(id: reminder.id)
+                                evaluateAllDone()
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        .listRowSeparatorTint(.clear)
+                        .listRowBackground(Color.black)
+                    }
+                }
+                .listStyle(.plain)
+                .background(Color.black)
+                .padding(.top, -30)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+
+                addButton
+                    .padding(.trailing, 25)
+                    .padding(.bottom, 35)
             }
-            .listStyle(.plain)
-            .background(Color.black)
-            .padding(.top, -30)
-            .ignoresSafeArea(.keyboard, edges: .bottom)
-            
-            
-            // ✅ زر الإضافة العائم (Liquid Glass FAB)
-            Button(action: {
-                isShowingAddPlantSheet = true
-            }) {
-                Image(systemName: "plus")
-                    .font(.system(size: 20, weight: .bold))
-                    .frame(width: 55, height: 55) // تحديد الحجم
-                    .foregroundColor(.white)
-                    // 1. المادة الزجاجية (Liquid Glass Effect)
-                    .background(
-                        Circle()
-                            .fill(.ultraThinMaterial) // المظهر الزجاجي
-                            .shadow(color: .white.opacity(0.1), radius: 5, x: 0, y: 3)
-                    )
-                    // 2. الحدود الزجاجية (Glass Border)
-                    .overlay(
-                        Circle()
-                            .stroke(.white.opacity(0.3), lineWidth: 1.5)
-                    )
-            }
-            // ❌ تم حذف buttonStyle(.glassProminent) واستبدالها بالـ background/overlay أعلاه
-            .clipShape(Circle())
-            .padding(.trailing, 25)
-            .padding(.bottom, 35)
         }
         .preferredColorScheme(.dark)
-        // ✅ موديفاير Sheet لاستدعاء SetReminderView (تأكيد عمل الـ Sheet)
+
+        // شيت إضافة/تعديل
         .sheet(isPresented: $isShowingAddPlantSheet) {
-            SetReminderView { newPlant in
-                todayReminders.append(
-                    PlantReminder(
-                        name: newPlant.name,
-                        details: newPlant.details,
-                        locationIcon: newPlant.locationIcon,
-                        isCompleted: false,
-                        room: newPlant.room,
-                        lightDetails: newPlant.lightDetails,
-                        waterAmount: newPlant.waterAmount
-                    )
+            SetReminderView(
+                reminderToEdit: nil,
+                onSave: { newPlant in
+                    viewModel.add(newPlant)
+                    evaluateAllDone()
+                    // جدولة إشعار تجريبي بعد 5 ثواني ليظهر مثل الصورة
+                    scheduleWaterReminderTest(after: 5)
+                },
+                onUpdate: nil,
+                onDelete: nil
+            )
+        }
+        .sheet(isPresented: $isShowingEditSheet, onDismiss: {
+            selectedReminderForEdit = nil
+        }) {
+            if let editing = selectedReminderForEdit {
+                SetReminderView(
+                    reminderToEdit: editing,
+                    onSave: { _ in },
+                    onUpdate: { updated in
+                        viewModel.update(updated)
+                        evaluateAllDone()
+                    },
+                    onDelete: { id in
+                        viewModel.delete(id: id)
+                        evaluateAllDone()
+                    }
                 )
+            } else {
+                Color.black.ignoresSafeArea()
             }
         }
 
+        .onChange(of: viewModel.completedReminders) { _, _ in
+            evaluateAllDone()
+        }
+        .onChange(of: viewModel.totalReminders) { _, _ in
+            evaluateAllDone()
+        }
+        .onAppear {
+            evaluateAllDone()
+        }
     }
-    
-    // الأجزاء المساعدة
+
+    // زر + الدائري (مستخرج كـ View لنعيد استخدامه في الحالتين)
+    private var addButton: some View {
+        Button(action: {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                plusPressed = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                    plusPressed = false
+                    isShowingAddPlantSheet = true
+                }
+            }
+        }) {
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color("green1").opacity(0.95),
+                                Color("green1").opacity(0.75)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(
+                                LinearGradient(
+                                    colors: [Color.white.opacity(0.55), Color.white.opacity(0.05)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1.5
+                            )
+                    )
+                    .shadow(color: Color("green1").opacity(0.35), radius: 10, x: 0, y: 6)
+                    .shadow(color: .black.opacity(0.6), radius: 20, x: 0, y: 10)
+
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.22), .clear],
+                            startPoint: .topLeading,
+                            endPoint: .center
+                        )
+                    )
+                    .scaleEffect(0.98)
+                    .blendMode(.plusLighter)
+                    .allowsHitTesting(false)
+
+                Image(systemName: "plus")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2)
+            }
+            .frame(width: 58, height: 58)
+            .scaleEffect(plusPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.35, dampingFraction: 0.7), value: plusPressed)
+            .accessibilityLabel("Add Plant Reminder")
+            .accessibilityAddTraits(.isButton)
+        }
+    }
+
+    private func scheduleWaterReminderTest(after seconds: TimeInterval = 5) {
+        let content = UNMutableNotificationContent()
+        content.title = "Planto"
+        content.body = "Hey! let’s water your plant"
+        content.sound = .default
+
+        // مرفق اختياري لصورة صغيرة إن وُجدت داخل الـ Bundle باسم image3.png
+        if let url = Bundle.main.url(forResource: "image3", withExtension: "png"),
+           let attachment = try? UNNotificationAttachment(identifier: "thumb", url: url, options: nil) {
+            content.attachments = [attachment]
+        }
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Failed to schedule notification: \(error)")
+            }
+        }
+    }
+
+    private func evaluateAllDone() {
+        let shouldShow = viewModel.totalReminders > 0 && viewModel.completedReminders == viewModel.totalReminders
+        if shouldShow != showAllDone {
+            showAllDone = shouldShow
+        }
+    }
+
     var headerView: some View {
         VStack(alignment: .leading, spacing: 5) {
-            // ✅ توسيط العنوان الرئيسي
             HStack {
                 Text("My Plants 🌱")
                     .font(.largeTitle).bold()
@@ -124,105 +265,122 @@ struct TodayReminderView: View {
                 Spacer()
             }
             .padding(.bottom, 20)
-            
-            // ✅ توسيط نص التقدم
+
             HStack {
-                Text(completedReminders == totalReminders ?
+                Text(viewModel.totalReminders > 0 && viewModel.completedReminders == viewModel.totalReminders ?
                      "All tasks complete! ✨" :
-                     "\(completedReminders) of your plants feel loved today! 🪴")
+                     "\(viewModel.completedReminders) of your plants feel loved today! 🪴")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 Spacer()
             }
 
-            // شريط التقدم (Progress Bar)
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 3).frame(width: geometry.size.width, height: 6).foregroundColor(Color(white: 0.15))
-                    RoundedRectangle(cornerRadius: 3).frame(width: geometry.size.width * CGFloat(progress), height: 6).foregroundColor(Color("green1"))
+                    RoundedRectangle(cornerRadius: 3)
+                        .frame(width: geometry.size.width, height: 6)
+                        .foregroundColor(Color(white: 0.15))
+                    RoundedRectangle(cornerRadius: 3)
+                        .frame(width: geometry.size.width * CGFloat(viewModel.progress), height: 6)
+                        .foregroundColor(Color("green1"))
                 }
             }
-            .frame(height: 6).padding(.bottom, 10)
+            .frame(height: 6)
+            .padding(.bottom, 10)
         }
         .padding(.horizontal)
     }
-    
+
     var filterBar: some View {
-        // ❌ شريط تصفية فارغ
         HStack(spacing: 10) {
             Spacer()
         }
-        .padding(.horizontal).padding(.bottom, 15)
+        .padding(.horizontal)
+        .padding(.bottom, 15)
     }
 }
 
-// Struct للصف الواحد (Row)
+private struct AllDoneHeader: View {
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("My Plants 🌱")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.white)
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.top, 60)
+
+            Divider()
+                .background(Color.white)
+                .padding(.horizontal)
+        }
+    }
+}
+
 struct ReminderRow: View {
     @Binding var reminder: PlantReminder
-    
+    var onToggle: () -> Void
+
     var foregroundColor: Color { reminder.isCompleted ? .gray : .white }
-    
+
     var body: some View {
         HStack(spacing: 15) {
-            
-            // 1. زر الدائرة (Checkmark)
             Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-                .resizable().frame(width: 25, height: 25)
+                .resizable()
+                .frame(width: 25, height: 25)
                 .foregroundColor(reminder.isCompleted ? Color("green1") : .gray)
-                .onTapGesture { withAnimation(.spring()) { reminder.isCompleted.toggle() } }
+                .onTapGesture {
+                    withAnimation(.spring()) {
+                        onToggle()
+                    }
+                }
 
-            // 2. المحتوى الرئيسي (الاسم والتفاصيل)
             VStack(alignment: .leading, spacing: 5) {
-                
-                // تفاصيل الموقع (in Kitchen)
                 HStack(spacing: 5) {
                     Image(systemName: "paperplane.fill")
-                        .font(.system(size: 10)).foregroundColor(.gray)
+                        .font(.system(size: 10))
+                        .foregroundColor(.gray)
                     Text("in \(reminder.room)")
-                        .font(.caption).foregroundColor(.gray)
+                        .font(.caption)
+                        .foregroundColor(.gray)
                 }
-                
-                // اسم النبتة
-                Text(reminder.name).font(.headline).foregroundColor(foregroundColor)
-                
-                // التفاصيل الإضافية (Light & Water)
+
+                HStack {
+                    Text(reminder.name)
+                        .font(.headline)
+                        .foregroundColor(foregroundColor)
+                    Spacer()
+                }
+
                 HStack(spacing: 15) {
-                    
-                    // Light التفاصيل
                     HStack(spacing: 5) {
-                        Image(systemName: "sun.max.fill").font(.system(size: 10)).foregroundColor(.gray)
-                        Text(reminder.lightDetails).font(.caption).foregroundColor(.gray)
+                        Image(systemName: "sun.max.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(.gray)
+                        Text(reminder.lightDetails)
+                            .font(.caption)
+                            .foregroundColor(.gray)
                     }
-                    
-                    // Water التفاصيل
+
                     HStack(spacing: 5) {
-                        Image(systemName: "drop.fill").font(.system(size: 10)).foregroundColor(.gray)
-                        Text(reminder.waterAmount).font(.caption).foregroundColor(.gray)
+                        Image(systemName: "drop.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(.gray)
+                        Text(reminder.waterAmount)
+                            .font(.caption)
+                            .foregroundColor(.gray)
                     }
                 }
             }
-            
+
             Spacer()
         }
         .padding(.vertical, 8)
     }
 }
 
-// Struct لزر التصفية
-struct FilterButton: View {
-    let title: String
-    @Binding var selectedFilter: String
-    var isSelected: Bool { title == selectedFilter }
-    
-    var body: some View {
-        Button(action: { selectedFilter = title }) {
-            Text(title).font(.caption).bold().padding(.vertical, 8).padding(.horizontal, 15)
-                .background(RoundedRectangle(cornerRadius: 15).fill(isSelected ? Color("green1") : Color(white: 0.15)))
-                .foregroundColor(isSelected ? .black : .gray)
-        }
-    }
-}
-
 #Preview {
-    TodayReminderView()
+    TodayReminderView(viewModel: TodayReminderViewModel())
 }

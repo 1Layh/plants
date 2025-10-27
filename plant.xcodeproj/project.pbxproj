@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B18645F2EAF3A200067537E /* PlantReminder 3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B18645E2EAF3A200067537E /* PlantReminder 3.swift */; };
+		6B21DE2E2EAFD0D700E4B9EF /* TodayReminderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B21DE2D2EAFD0D700E4B9EF /* TodayReminderViewModel.swift */; };
 		6B923A282EA5272200F0858F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B923A272EA5272200F0858F /* Assets.xcassets */; };
 		6B97EBD12EA8DF9E00A00DD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97EBCE2EA8DF9E00A00DD4 /* ContentView.swift */; };
 		6B97EBD32EA8DF9E00A00DD4 /* SetReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B97EBD02EA8DF9E00A00DD4 /* SetReminderView.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6B18645E2EAF3A200067537E /* PlantReminder 3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantReminder 3.swift"; sourceTree = "<group>"; };
+		6B21DE2D2EAFD0D700E4B9EF /* TodayReminderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayReminderViewModel.swift; sourceTree = "<group>"; };
 		6B4B960C2EA50EC700BE6A16 /* plant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = plant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4B96192EA50EC800BE6A16 /* plantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = plantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4B96232EA50EC800BE6A16 /* plantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = plantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,7 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				6B97EBDC2EA8F06200A00DD4 /* viewModel */,
-				6B97EBDB2EA8F04E00A00DD4 /* model */,
+				6B97EBDB2EA8F04E00A00DD4 /* Models */,
 				6B97EBDA2EA8F03D00A00DD4 /* view */,
 				6B4B960E2EA50EC700BE6A16 /* plant */,
 				6B4B961C2EA50EC800BE6A16 /* plantTests */,
@@ -112,19 +116,21 @@
 		6B97EBDA2EA8F03D00A00DD4 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				6B97EBDD2EA8FC6600A00DD4 /* TodayReminderView.swift */,
 				6B97EBCE2EA8DF9E00A00DD4 /* ContentView.swift */,
 				6B97EBD02EA8DF9E00A00DD4 /* SetReminderView.swift */,
-				6B97EBDD2EA8FC6600A00DD4 /* TodayReminderView.swift */,
 				6B97EC502EAE56CF00A00DD4 /* AllDoneView.swift */,
+				6B21DE2D2EAFD0D700E4B9EF /* TodayReminderViewModel.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
 		};
-		6B97EBDB2EA8F04E00A00DD4 /* model */ = {
+		6B97EBDB2EA8F04E00A00DD4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6B18645E2EAF3A200067537E /* PlantReminder 3.swift */,
 			);
-			path = model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		6B97EBDC2EA8F06200A00DD4 /* viewModel */ = {
@@ -281,6 +287,8 @@
 			files = (
 				6B97EBDE2EA8FC6900A00DD4 /* TodayReminderView.swift in Sources */,
 				6B97EBD12EA8DF9E00A00DD4 /* ContentView.swift in Sources */,
+				6B18645F2EAF3A200067537E /* PlantReminder 3.swift in Sources */,
+				6B21DE2E2EAFD0D700E4B9EF /* TodayReminderViewModel.swift in Sources */,
 				6B97EC512EAE56CF00A00DD4 /* AllDoneView.swift in Sources */,
 				6B97EBD32EA8DF9E00A00DD4 /* SetReminderView.swift in Sources */,
 			);
